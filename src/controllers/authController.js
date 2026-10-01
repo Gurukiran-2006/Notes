@@ -1,5 +1,6 @@
 const bcrypt=require("bcrypt");
 const User=require("../models/user");
+const jwt=require("jsonwebtoken");
 
 const signup=async(req,res)=>{
     try{
@@ -43,4 +44,51 @@ const signup=async(req,res)=>{
     }
 }
 
-module.exports={signup};
+const login=async(req,res)=>{
+    try{
+     const {email,password}=req.body;
+
+     if(!email || !password){
+        return res.status(400).json({
+           message:"All Fields are Required" 
+        });
+     }
+
+     const user=await User.findOne({email});
+     if(!user){
+        return res.status(401).json({
+            message:"User not exists"
+        });
+     }
+
+     const isMatch=await bcrypt.compare(password,user.password);
+     if(!isMatch){
+       return res.status(401).json({
+        message:"Invalid Credentials"
+       });
+     }
+
+     const token=jwt.sign(
+        {id:user._id,},
+        process.env.JWT_SECRET,
+        {expiresIn:"7d"}
+     );
+
+     res.json({
+        message:"Login successfull",
+        token,
+        user:{
+            id:user._id,
+            name:user.name,
+            email:user.email
+        }
+     });
+
+    }
+    catch(err){
+        res.status(500).json({
+            message:err.message
+        });
+    }
+};
+module.exports={signup,login};

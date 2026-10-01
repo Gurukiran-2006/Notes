@@ -1,7 +1,8 @@
 const express=require("express");
-const signupRouter=express.Router();
-const {signup}=require("../controllers/authController");
+const Router=express.Router();
+const {signup,login}=require("../controllers/authController");
 
-signupRouter.post("/signup",signup);
+Router.post("/signup",signup);
+Router.get("/login",login);
 
-module.exports=signupRouter;
+module.exports=Router;

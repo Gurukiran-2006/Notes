@@ -5,11 +5,13 @@ const cors=require("cors");
 const connectDB=require("./config/database");
 
 const app=express();
+const cookieParser=require("cookie-parser");
 
 const authRouter=require("./routes/authRoutes");
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/auth",authRouter);
 

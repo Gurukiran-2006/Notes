@@ -74,6 +74,8 @@ const login=async(req,res)=>{
         {expiresIn:"7d"}
      );
 
+     res.cookie("token",token);
+
      res.json({
         message:"Login successfull",
         token,
@@ -91,4 +93,12 @@ const login=async(req,res)=>{
         });
     }
 };
-module.exports={signup,login};
+
+const logout=(req,res)=>{
+    res.cookie("token",null,
+        {
+            expiresIn:new Date(Date.now())
+        });
+        res.send("logout successfull");
+}
+module.exports={signup,login,logout};

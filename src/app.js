@@ -6,17 +6,17 @@ const connectDB=require("./config/database");
 
 const app=express();
 
+const authRouter=require("./routes/authRoutes");
+
 app.use(cors());
 app.use(express.json());
 
-app.get("/",(req,res)=>{
-    res.send("api is running successfully");
-});
+app.use("/auth",authRouter);
 
 connectDB()
 .then(()=>{
     console.log("database connection establised successfully");
-    app.listen(process.env.port||5000,()=>
+    app.listen(process.env.PORT||5000,()=>
     console.log("server is running")
 );
 })

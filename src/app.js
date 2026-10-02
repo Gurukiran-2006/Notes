@@ -9,11 +9,15 @@ const cookieParser=require("cookie-parser");
 
 const authRouter=require("./routes/authRoutes");
 
+const notesRouter=require("./routes/notesRouter");
+
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
 app.use("/auth",authRouter);
+
+app.use("/notes",notesRouter);
 
 connectDB()
 .then(()=>{

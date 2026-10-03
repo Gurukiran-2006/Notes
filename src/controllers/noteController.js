@@ -27,6 +27,21 @@ const createNotes=async(req,res)=>{
 
 const getNotes=async(req,res)=>{
     try{
+        const {search,tags}=req.query;
+        const filter={ user:req.user.id};
+
+        if(tags){
+            filter.tag=tags;
+        }
+        if(search){
+            const escaped=search.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+
+            filter.$or=[
+                {title:{$regex:escaped, $options:"i"}},
+                {content:{$regex:escaped, $options:"i"}},
+            ];
+        }
+
        const notes=await Note.find({user:req.user.id}).sort({
         isPinned:-1,
         createdAt:-1
